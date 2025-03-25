@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改音频处理')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-process-edit" th:object="${bAudioProcess}">
+            <input name="audioProcessId" th:field="*{audioProcessId}" type="hidden">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">音频路径：</label>
+                    <div class="col-sm-8">
+                        <input name="processUrl" th:field="*{processUrl}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">音频名称：</label>
+                    <div class="col-sm-8">
+                        <input name="processName" th:field="*{processName}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <table class="table table-bordered" id="rowListTable">
+                    <thead>
+                    <tr>
+                        <th>处理项ID</th>
+                        <th>音频处理ID</th>
+                        <th>音频ID</th>
+                        <th>顺序号</th>
+                    </tr>
+                    </thead>
+                    <tbody id="rowListContainer">
+                    <!-- 使用Thymeleaf渲染已有的BAudioProcessItem列表 -->
+                    <tr th:each="item, stat : ${bAudioProcess.rowList}">
+                        <td>
+                            <input th:attr="name='rowList[' + ${stat.index} + '].processItemId'" th:value="${item.processItemId}" class="form-control" type="text" readonly="readonly">
+                        </td>
+                        <td>
+                            <input th:attr="name='rowList[' + ${stat.index} + '].audioProcessId'" th:value="${item.audioProcessId}" class="form-control" type="text" readonly="readonly">
+                        </td>
+                        <td>
+                            <input th:attr="name='rowList[' + ${stat.index} + '].audioId'" th:value="${item.audioId}" class="form-control" type="text" readonly="readonly">
+                        </td>
+                        <td>
+                            <input th:attr="name='rowList[' + ${stat.index} + '].orderNum'" th:value="${item.orderNum}" class="form-control" type="text" readonly="readonly">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "function/process";
+        $("#form-process-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-process-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

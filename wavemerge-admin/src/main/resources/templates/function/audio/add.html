@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增音频文件')" />
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-audio-add">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">音频路径：</label>
+                <div class="col-sm-8">
+                    <input type="hidden" name="audioUrl">
+                    <div class="file-loading">
+                        <input class="form-control file-upload" id="audioUrl" name="file" type="file">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">音频名称：</label>
+                <div class="col-sm-8">
+                    <input name="audioName" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script th:inline="javascript">
+    var prefix = ctx + "function/audio"
+    $("#form-audio-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-audio-add').serialize());
+        }
+    }
+
+    $(".file-upload").fileinput({
+        uploadUrl: ctx + 'common/uploadAudio',
+        maxFileCount: 1,
+        autoReplace: true
+    }).on('fileuploaded', function (event, data, previewId, index) {
+        $("input[name='" + event.currentTarget.id + "']").val(data.response.url)
+    }).on('fileremoved', function (event, id, index) {
+        $("input[name='" + event.currentTarget.id + "']").val('')
+    })
+</script>
+</body>
+</html>
